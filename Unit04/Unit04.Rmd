@@ -1,0 +1,90 @@
+---
+title: "Live Session Unit 04"
+author: "Claudia Woodruff"
+date: "September 27, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1: FiveThirtyEight Data found at https://github.com/rudeboybert/fivethirtyeight
+
+#### 1a) Install the fivethirtyeight package
+
+```{r}
+#install.packages("fivethirtyeight")
+library("fivethirtyeight")
+```
+
+#### 1b) . In the listing of Data sets in package ‘fivethirtyeight,’ assign the eighteenth data set toan object ‘df.’
+
+```{r getEighteenth }
+d <- data(package="fivethirtyeight")
+nm <- d$results[18,"Item"]
+df <- college_recent_grads
+```
+
+#### 1C) URL to related news
+Use a more detailed list of the data sets to write out the URL in a comment to the related news story.
+The URL below was obtained by:
+**vignette("fivethirtyeight", package = "fivethirtyeight")**
+
+http://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+
+#### 1d) Using R command(s), give the dimensions and column names of this data frame.
+
+```{r dimcol }
+dim(df)
+names(df)
+
+```
+
+
+## Question 2: Use your newly assigned data frame for Question 2.
+#### 2a) Column names and counts
+Write an R command that gives you the column names of the data frame. Right after that, write one that counts the number of columns but not rows. 
+
+```{r countCol }
+names(df)
+ncol(df)
+```
+
+#### 2b) Count each major categories.
+Generate a count of each unique major_category in the data frame. Assign it to major_count.
+
+```{r maj_cat_count }
+library(plyr)
+major_count <- count(college_recent_grads, "major_category")
+major_count
+```
+
+#### 2c) In a single pass of barplot(), make a barplot of major_count.
+To make things easier to read, enter par(las=2) before your plot to make the text perpendicular to the axis. Make sure to label the title with something informative, label the x and y axis, and make it any color other than grey. Assign the major_category labels to their respective bar. Flip the barplot horizontally so that bars extend to the right, not upward.
+
+```{r plotCount }
+# Fitting Labels 
+par(las=2)          # make label text perpendicular to axis
+par(mar=c(5,15,4,2)) # increase y-axis margin.
+
+
+barplot(major_count$freq, 
+        main="Frequency of Majors by Categories",
+        horiz=TRUE, 
+        names.arg=major_count$major_category,
+        xlab="Frequency",
+        col="green")
+
+```
+
+#### 2d) Write the fivethirtyeight data to a csv file
+
+```{r write_to_file}
+write.csv(df, file = "CollegeRecentGrads.csv", row.names=FALSE)
+```
+
+## Question 3 GitHub Repository with Unit04 Assignments
+##### (RMarkdown script, HTML file, and data from ‘fivethirtyeight.’ )
+
+https://github.com/cruffwood/Homework.git
