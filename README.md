@@ -1,6 +1,7 @@
 # Homework
 SMU MSDS Homework
 C Woodruff (woodruffc@smu.edu)
+Created Sept 24, 2017
 
 Purpose of this repo: MSDS 6306 Doing Data Sciece - Versioning
 Live session Unit 04 assignment - Question 3. Codebook
