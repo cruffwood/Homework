@@ -1,0 +1,131 @@
+---
+title: "Live Session Unit 05 - Tidy Data"
+author: "Claudia Woodruff"
+date: "October 4, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Question 1: Data Munging utilizing **yob2016.txt**
+
+#### 1a) Import the .txt file into R so you can process it.
+
+```{r Import_2016 } 
+
+df <- read.table("yob2016.txt", sep = ";", header = FALSE)
+colnames(df) <- c("FName", "Sex", "Y2016Amt")
+colnames(df)
+         
+```
+
+#### 1b) Display the summary and structure of df.
+
+```{r Disp_df}
+
+summary(df)
+str(df)
+
+```
+
+#### 1c/d) Remove the observation where the Name has "yyy" at the end.
+####       and write an R command to figure out which name it is and display it.
+
+```{r FindName}
+# Find the name entered twice with the three y's and display it.
+yyy <- df$FName[grep("yyy", df$FName)]
+yyy
+
+y2016 <- df[-which(as.character(df$FName) == df$FName[grep("yyy", df$FName)]),]
+str(y2016)
+
+```
+
+
+## Question 2: Data Merging utilizing yob2015.txt
+##### This file is similar to yob2016, but contains names, gender, and total children given that name for the year **2015**.
+
+#### 2a)Import the .txt file into R. 
+
+
+```{r Import_2015}
+
+y2015 <- read.csv("yob2015.txt", header = FALSE)
+colnames(y2015) <- c("FName", "Sex", "Y2015Amt")
+str(y2015)
+summary(y2015)
+
+```
+
+#### 2b) Display the last ten rows in the dataframe. Describe something you find interesting about these 10 rows.
+
+#####     The names appear to be in ascending order. Both FName and Sex are factors.
+
+```{r }
+
+tail(y2016,10)
+
+```
+
+#### 2c) Merge y2016 and y2015 by your Name column; assign it to final. 
+* The client only cares about names that have data for both 2016 and 2015.
+* There should be no NA values in either of your amount of children rows after merging.
+
+```{r }
+                       
+final <- merge(x = y2016, y = y2015)       # Will match on "FName" and "Sex"
+
+summary(final)
+
+```
+
+## Question 3: Data Summary
+
+#### 3a) Add the amount of children in 2015 and 2016 in a new column called "Total".
+In those two years combined, how many people were given popular names? 
+
+```{r }
+# Add amounts 2015 and 2015 into 'final'
+final$Total <- rowSums(final[,c("Y2015Amt", "Y2016Amt")])
+
+str(final)  # 26550 observations
+
+```
+
+#### 3b) Sort the data by Total. What are the top 10 most popular names?
+
+```{r }
+
+final <- final[order(final$Total, decreasing = TRUE), ]
+head(final, 10)
+
+```
+
+####  3c) The client is expecting a girl! Omit boys and give the top 10 most popular girl's names. Assign this to object **girl**.
+
+```{r GirlsOnly}
+
+girl <- final[final$Sex %in% c("F"), ] 
+
+head(girl, 10)
+
+```
+
+####  3d) Write these top 10 girl Names and their Totals to a CSV file called **itsagirl.csv**. 
+* Do not include row labels. 
+* Leave out columns other than Name and Total.
+
+```{r }
+
+itsagirl <-girl[1:10, c("FName", "Total")]
+write.csv(itsagirl, file = "itsagirl.csv", row.names = FALSE)
+
+```
+
+## Question 4: Upload to GitHub
+### https://github.com/cruffwood/Homework
+
